@@ -1,5 +1,6 @@
 import React, { createContext, useState } from "react";
 
+//Change Theme Context and Provider
 interface ThemeContextType {
     theme: string,
     setTheme: (theme: string) => void
