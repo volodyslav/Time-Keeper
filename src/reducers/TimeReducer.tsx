@@ -27,6 +27,10 @@ export const timeReducer = (state: TimeState, action: TimeActions) => {
             return {...state, minuteSession: state.minuteSession + action.payload}
         case TimeTypesAction.DECREASE_MINUTE_SESSION:
             return {...state, minuteSession: state.minuteSession - action.payload}
+        case TimeTypesAction.INCREASE_MINUTE_BREAK:
+            return {...state, minuteBreak: state.minuteBreak + action.payload}
+        case TimeTypesAction.DECREASE_MINUTE_BREAK:
+            return {...state, minuteBreak: state.minuteBreak - action.payload}
         default: 
             return state
     }
