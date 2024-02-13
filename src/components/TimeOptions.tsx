@@ -5,8 +5,8 @@ import BreakTime from './BreakTime'
 import StopStartReset from './StopStartReset'
 // Main Time Options like increase and decrease
 const TimeOptions = () => {
-    const defaultSession = 1
-    const defaultBreak = 1
+    const defaultSession = 25
+    const defaultBreak = 5
     const [state, dispatch] = useReducer(timeReducer, {minuteSession: defaultSession, minuteBreak: defaultBreak}) 
 
     //Start and stop functions
@@ -34,7 +34,14 @@ const TimeOptions = () => {
     }
 
     useEffect(() => {
-        console.log(time)
+        if(time === "session"){
+            setMinutes(state.minuteSession)  
+         }else if(time === "break"){
+            setMinutes(state.minuteBreak) 
+         }
+    }, [state.minuteBreak, state.minuteSession])
+
+    useEffect(() => {
         if(startStop){
             if (seconds === 0 && minutes === 0){
                 playAudio()
@@ -46,6 +53,7 @@ const TimeOptions = () => {
                     setMinutes(state.minuteSession) 
                  }
             }else{
+                
                 const secondInt = setInterval(() => {
                     if(seconds === 0){
                         setSeconds(59)
@@ -59,27 +67,38 @@ const TimeOptions = () => {
         }
     }, [startStop, seconds, state.minuteSession, state.minuteBreak, time, minutes])
 
+    //Set default when some values changed
+    const setDefault = () => {
+        setSeconds(0)
+        setTime("session")
+        setMinutes(state.minuteSession)
+    }
+
     //Increase Session Time by 1
     const increaseSession = () => {
         if(state.minuteSession < 60 && !startStop){
           dispatch({type: TimeTypesAction.INCREASE_MINUTE_SESSION, payload: 1})  
         }
+        setDefault()
         
     }
     //Decrease Session Time by 1
     const decreaseSession = () => {
-        if(state.minuteSession > 0 && !startStop){
+        if(state.minuteSession > 1 && !startStop){
         dispatch({type: TimeTypesAction.DECREASE_MINUTE_SESSION, payload: 1})}
+        setDefault()
     }
     //Increase Break Time by 1
     const increaseBreak = () => {
         if(state.minuteBreak < 25 && !startStop){
         dispatch({type: TimeTypesAction.INCREASE_MINUTE_BREAK, payload: 1})}
+        setDefault()
     }
     //Decrease Break Time by 1
     const decreaseBreak = () => {
-        if(state.minuteBreak > 0 && !startStop){
+        if(state.minuteBreak > 1 && !startStop){
         dispatch({type: TimeTypesAction.DECREASE_MINUTE_BREAK, payload: 1})}
+        setDefault()
     }
 
     // Reset all
