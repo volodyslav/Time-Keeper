@@ -1,45 +1,25 @@
-import { useContext, useEffect, useRef } from "react"
+import { useContext, useEffect } from "react"
 import { ThemeContext } from "../contexts/ThemeContext"
-import { Store } from "tauri-plugin-store-api";
-
+import themeData from "./data/appData.json"
+import axios from "axios"
 // Theme Change Component
 const Theme = () => {
     const {theme, setTheme} = useContext(ThemeContext)
-    
-    //SAVE theme
-    
-    
-    const storeRef = useRef(new Store(".settings.dat"));
 
     useEffect(() => {
-        const save = async () => {
-            try {
-                const store = storeRef.current;
-                await store.set("app-theme", theme);
-                await store.save();
-                const newTheme = await store.get("app-theme");
-                if (newTheme === "") {
-                    setTheme(newTheme);
-                }
-            } catch (error) {
-                console.error("Error saving theme:", error);
-            }
-        };
+        setTheme(themeData.theme)
+    }, [])
 
-        save();
-    }, [storeRef.current, setTheme, theme]);
-
-    const  changeTheme = () => {
-        
-        if(theme === 'light'){
-            setTheme("dark")
-        }else if(theme === "dark"){
-            setTheme("light")
+    const  changeTheme = async () => {
+        const newTheme = theme === "light" ? "dark" : "light"
+        setTheme(newTheme)
+        try {
+            await axios.put('/api/theme', { theme: newTheme });
+            console.log('Theme saved successfully.');
+        } catch (error) {
+            console.error('Error saving theme:', error); 
         }
-        
     }
-
-    
 
     return (
         <div className=" text-end p-2">

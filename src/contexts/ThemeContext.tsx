@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { ReactNode, createContext, useState } from "react";
 
 //Change Theme Context and Provider
 interface ThemeContextType {
@@ -11,8 +11,11 @@ export const ThemeContext = createContext<ThemeContextType>({
     setTheme: () => {}
 })
 
+interface ThemeProviderProps {
+    children: ReactNode
+}
 
-export const ThemeProvider: React.FC = ({children}) => {
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({children}) => {
     const [theme, setTheme] = useState("light")
 
     return (
